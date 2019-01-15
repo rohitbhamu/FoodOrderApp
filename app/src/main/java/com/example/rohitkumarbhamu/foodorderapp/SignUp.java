@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.rohitkumarbhamu.foodorderapp.Model.User;
@@ -18,53 +16,53 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
-public class Signin extends AppCompatActivity {
+public class SignUp extends AppCompatActivity {
 
-    EditText edtPhone,edtPassword;
-    Button btnSingIn;
-
+    MaterialEditText edtPhone,edtName,edtPassword;
+    Button btnSignUp;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signin);
+        setContentView(R.layout.activity_sign_up);
 
-        edtPassword= (MaterialEditText)findViewById(R.id.edtPassword);
+        edtName= (MaterialEditText)findViewById(R.id.edtName);
+        edtPassword = (MaterialEditText)findViewById(R.id.edtPassword);
         edtPhone = (MaterialEditText)findViewById(R.id.edtPhoneNumber);
-        btnSingIn = (Button)findViewById(R.id.btnSignIn);
+
+        btnSignUp = (Button)findViewById(R.id.btnSignUp);
+
 
         //Init Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user=database.getReference("User");
 
-        btnSingIn.setOnClickListener(new View.OnClickListener() {
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final ProgressDialog mDialog = new ProgressDialog(Signin.this);
+
+                final ProgressDialog mDialog = new ProgressDialog(SignUp.this);
                 mDialog.setMessage("Please Wait...");
                 mDialog.show();
 
                 table_user.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        //Check if user not exist in database
-                        if(dataSnapshot.child(edtPhone.getText().toString()).exists()) {
-
-                            //get user information
+                        //check if already exist
+                        if(dataSnapshot.child(edtPhone.getText().toString()).exists())
+                        {
                             mDialog.dismiss();
-                            User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
+                            Toast.makeText(SignUp.this, "Phone Number already exist", Toast.LENGTH_SHORT).show();
 
-                            if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                Toast.makeText(Signin.this, "Sign In Successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(Signin.this, "Sign In failed", Toast.LENGTH_SHORT).show();
-                            }
                         }
-                        else {
+                        else
+                        {
                             mDialog.dismiss();
-                            Toast.makeText(Signin.this, "User doesn't exist in database", Toast.LENGTH_SHORT).show();
-
+                            User user = new User(edtName.getText().toString(),edtPassword.getText().toString());
+                            table_user.child(edtPhone.getText().toString()).setValue(user);
+                            Toast.makeText(SignUp.this, "Sign up Successfully ", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
 

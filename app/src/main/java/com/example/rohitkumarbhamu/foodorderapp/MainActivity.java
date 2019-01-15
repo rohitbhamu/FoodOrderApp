@@ -1,5 +1,6 @@
 package com.example.rohitkumarbhamu.foodorderapp;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,16 +27,20 @@ public class MainActivity extends AppCompatActivity {
         Typeface face =Typeface.createFromAsset(getAssets(),"fonts/Nabila.ttf");
         txtSlogan.setTypeface(face);
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-            }
-        });
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent signUp = new Intent(MainActivity.this,SignUp.class);
+                startActivity(signUp);
 
+            }
+        });
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent signIn = new Intent(MainActivity.this,Signin.class);
+                startActivity(signIn);
             }
         });
 
